@@ -1,0 +1,31 @@
+version: '3.7'
+services:
+  # redis
+  havi-redis:  
+    build:
+      context: .
+      dockerfile: ./dockerfile/Dockerfile
+    image: havi-redis
+    container_name: havi-redis
+    restart: always
+    ports:
+      - 6379:6379
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          memory: 1024M
+    volumes:
+      - ./source/redis/data:/data
+    networks:
+      - havi-redis-network
+    logging:
+     #limit logs to 150MB (3rotations of 50M each)
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "3"
+
+# Docker Networks
+networks:
+  havi-redis-network:
